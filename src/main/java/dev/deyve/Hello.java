@@ -5,6 +5,7 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Map;
+import java.util.Optional;
 
 public class Hello implements RequestHandler<Map<String, Object>, String> {
 
@@ -21,7 +22,10 @@ public class Hello implements RequestHandler<Map<String, Object>, String> {
             // Example: Deserialize JSON to a specific Java object
             Person person = objectMapper.readValue(jsonString, Person.class);
 
-            // Perform operations
+            // Validate the person object
+            Optional.ofNullable(person.name).orElseThrow(() -> new IllegalArgumentException("Name is required"));
+
+            // Perform operations using the person object
             return "Hello " + person.getName() + "!";
 
         } catch (Exception e) {
